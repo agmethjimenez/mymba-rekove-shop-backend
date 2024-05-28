@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models;
 use App\Mail\RecuperarPasswordMail;
+use App\Models\Administrador;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Credencial;
 use App\Models\Usuario;
@@ -67,7 +68,15 @@ class UsuarioController extends Controller
     if ($crede['status']){
         return response()->json($crede,200);
     }else{
-        return response()->json($crede,500); 
+        $credeadmin = Administrador::login([
+            'email'=>$request->email,
+            'password'=>$request->password
+        ]);
+        if(!$credeadmin['status']){
+            return response()->json($crede,500); 
+        }
+
+        return response()->json($credeadmin,200);
     }
     }
 

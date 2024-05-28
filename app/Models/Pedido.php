@@ -11,6 +11,7 @@ class Pedido extends Model
     protected $table = 'pedidos';
     protected $primaryKey = 'idPedido';
     protected $fillable = [
+        'idPedido',
         'usuario',
         'ciudad',
         'direccion',
@@ -26,5 +27,43 @@ class Pedido extends Model
     }
     public function detallespedido(){
         return $this->hasMany(DetallePedido::class,'idPedido');
+    }
+
+    public static function InsertPedido($data){
+        $pedido = self::create([
+            "idPedido"=> substr(uniqid(), 0, 10),
+            "usuario"=> $data['usuario'],
+            "ciudad"=> $data['ciudad'],
+            "direccion"=> $data['direccion'],
+            "fecha" => now(),
+            "total" => $data['totalp'],
+            "detalles_pago"=> substr($data['datospago'], 0, 255),
+            "estado" => 1 
+        ]);
+
+        if(!$pedido){
+            return[
+                "status"=>false,
+                "mensaje"=>"Error al insertar pedido"
+            ];
+        }
+
+        foreach ($data['detalles'] as $detalles ) {
+            DetallePedido::create([
+                "idPedido"=> $pedido->idPedido,
+                "idProducto" => $detalles['id'],
+                "cantidad"=> $detalles['cantidad'],
+                "total"=> $detalles['total']
+            ]);
+
+            $producto = Producto::find($detalles['id']);
+            $producto->cantidadDisponible += $detalles['cantidad'];
+            $producto->save();
+        }
+
+        return [
+            'status' => true,
+            'mensaje' => 'Pedido exitoso'
+        ];
     }
 }

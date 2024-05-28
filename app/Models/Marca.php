@@ -16,5 +16,40 @@ class Marca extends Model
     public function productos(){
         return $this->hasMany(Producto::class,'marca','idMarca');
     }
+
+    public static function allMarcas(){
+        return self::all();
+    }
+
+    static public function oneMarca($id){
+        return self::find($id);
+    }
+
+    public static function createMarca($name){
+        return self::create([
+            "marca"=>$name
+        ]);
+    }
+
+    public static function updateMarca($id, $name)
+    {
+        $marca = self::find($id);
+        if ($marca) {
+            $marca->marca = $name;
+            $marca->save();
+            return $marca;
+        }
+        return null;
+    }
+
+    public static function deleteMarca($id)
+    {
+        $marca = self::find($id);
+        if ($marca) {
+            $marca->delete();
+            return true;
+        }
+        return false;
+    }
     
 }

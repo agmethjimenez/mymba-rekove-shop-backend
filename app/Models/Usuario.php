@@ -113,6 +113,7 @@ class Usuario extends Model
         }
         return [
             'status' => true,
+            'tipo'=>'user',
             'id' => $usuario->id,
         ];
     }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\adminController;
 use App\Http\Controllers\ProveedorController;
 use App\Http\Controllers\UsuarioController;
 use Illuminate\Http\Request;
@@ -36,6 +37,12 @@ Route::post('/clave/corregir');
 Route::get('/proveedores',[ProveedorController::class, 'allProveedors']);
 Route::get('/proveedores/{id}',[ProveedorController::class,'OneProveedors']);
 Route::post('/proveedores',[ProveedorController::class,'CreateProveedor']);
+
+
+#RUTAS ADMINISTRADOR
+Route::post('/admin/create',[adminController::class,'registro']);
+Route::put('/admin/update', [adminController::class, 'update']);
+Route::post('/admin/restaurar',[adminController::class, 'changePassword']);
 
 
 
