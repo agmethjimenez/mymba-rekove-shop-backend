@@ -16,11 +16,15 @@ class DetallePedido extends Model
         'cantidad',
         'total'
     ];
+    public $incrementing = false; 
+    public $timestamps = false;
 
     public function pedido(){
         return $this->belongsTo(Pedido::class,'idPedido','idPedido');
     }
+    
     public function producto(){
-        return $this->belongsTo(Producto::class,'idProducto','idPedido');
+        return $this->belongsTo(Producto::class,'idProducto','idProducto');
     }
+    
 }

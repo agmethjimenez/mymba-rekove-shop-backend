@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\adminController;
+use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\ProveedorController;
 use App\Http\Controllers\UsuarioController;
 use Illuminate\Http\Request;
@@ -20,11 +21,15 @@ Route::get('/usuarios/{id}',[UsuarioController::class, 'usuarioPorid']);
 //Buscar todos
 Route::get('/usuarios',[UsuarioController::class,'usuariosTodos']);
 //Desactivar
-Route::delete('/usuarios/{id}',[UsuarioController::class, 'desactivarUsuario']);
+Route::delete('/usuarios/{id}/{token}',[UsuarioController::class, 'desactivarUsuario']);
 
 
 #LOGIN
 Route::post('/login',[UsuarioController::class, 'login']);
+
+
+#CAMBIO DE CLAVE
+Route::post('/credencial/cambioclave',[UsuarioController::class, 'CambioClave']);
 
 
 #RECUPERACION CONTRASEÑA
@@ -40,9 +45,14 @@ Route::post('/proveedores',[ProveedorController::class,'CreateProveedor']);
 
 
 #RUTAS ADMINISTRADOR
+Route::get('/admin/read',[adminController::class,'searchByToken']);
 Route::post('/admin/create',[adminController::class,'registro']);
 Route::put('/admin/update', [adminController::class, 'update']);
 Route::post('/admin/restaurar',[adminController::class, 'changePassword']);
 
+#RUTA DE PEDIDO
+Route::get('/pedidos', [PedidoController::class, 'getPedidos']);
+Route::get('/pedidos/{id}', [PedidoController::class, 'getPedidos']);
+Route::get('/usuario/pedido/{id}',[PedidoController::class,'getPedidoUser']);
 
 

@@ -113,5 +113,17 @@ class Administrador extends Model
         ];
     }
 
+    public static function searchByUsername($username)
+    {
+        return self::where('username', 'LIKE', "%$username%")->get();
+    }
+
+    public static function searchByToken($token)
+    {
+        return self::where('token', $token)->first();
+    }
+
+    
+
 
 }

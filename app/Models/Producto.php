@@ -24,7 +24,8 @@ class Producto extends Model
         'activo'
     ];
     public $timestamps = false;
-
+    public $incrementing = false; 
+    
     public function proveedor(){
         return $this->belongsTo(Proveedor::class,'proveedor','idProveedor');
 

@@ -41,8 +41,33 @@ class Usuario extends Model
 
     public static function getUsuarios()
     {
-        return self::with('tipoid')->get();
+        return self::where('activo',true)->with('tipoid')->get();
     }
+    public static function searchUsuariosByName($query = null, $tipoid = null)
+    {
+        $queryBuilder = self::where('activo',true);
+    
+        if ($query !== null) {
+            $queryBuilder->where(function ($q) use ($query) {
+                $q->whereRaw("CONCAT(primerNombre, ' ', segundoNombre, ' ', primerApellido, ' ', segundoApellido) LIKE ?", ["%$query%"])
+                  ->orWhere('primerNombre', 'LIKE', "%$query%")
+                  ->orWhere('segundoNombre', 'LIKE', "%$query%")
+                  ->orWhere('primerApellido', 'LIKE', "%$query%")
+                  ->orWhere('segundoApellido', 'LIKE', "%$query%")
+                  ->where('activo',true);
+            });
+        }
+    
+        if ($tipoid !== null && $tipoid != 0) {
+            $queryBuilder->where('tipoId', $tipoid);
+        }
+    
+        return $queryBuilder->with('tipoid')->get();
+    }
+    
+
+
+
     public static function getUsuariosporid($id)
     {
         return self::with('tipoid')->find($id);
@@ -70,7 +95,7 @@ class Usuario extends Model
             Credencial::create([
                 'id' => $idUsuario,
                 'email' => $data['email'],
-                'token' => bin2hex(random_bytes(16)),
+                'token' => bin2hex(random_bytes(32)),
                 'codigo' => rand(1000, 9999),
                 'fecha_cambio' => null,
                 'password' => bcrypt($data['password']),
@@ -111,10 +136,13 @@ class Usuario extends Model
                 'message' => 'Contraseña incorrecta'
             ];
         }
+        $credencial->token = bin2hex(random_bytes(32));
+        $credencial->save();
         return [
             'status' => true,
             'tipo'=>'user',
             'id' => $usuario->id,
+            'token'=> $credencial->token
         ];
     }
 

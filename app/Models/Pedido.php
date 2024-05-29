@@ -20,14 +20,19 @@ class Pedido extends Model
         'detalles_pago',
         'estado'
     ];
+    public $incrementing = false; 
     public $timestamps = false;
 
     public function usuario(){
         return $this->belongsTo(Usuario::class,'usuario','id');
     }
-    public function detallespedido(){
-        return $this->hasMany(DetallePedido::class,'idPedido');
+    public function estado(){
+        return $this->belongsTo(Estado::class, 'estado', 'codEst');
     }
+    public function detallespedido(){
+        return $this->hasMany(DetallePedido::class, 'idPedido', 'idPedido');
+    }
+    
 
     public static function InsertPedido($data){
         $pedido = self::create([
@@ -66,4 +71,5 @@ class Pedido extends Model
             'mensaje' => 'Pedido exitoso'
         ];
     }
+
 }

@@ -9,8 +9,7 @@ class Proveedor extends Model
 {
     use HasFactory;
     protected $table = 'proveedores';
-    protected $keyType = 'string';
-    public $incrementing = false;
+    protected $primaryKey= 'idProveedor';
     protected $fillable = [
         'idProveedor',
         'nombreP',
@@ -39,6 +38,19 @@ class Proveedor extends Model
     public static function getProveedorById($id)
     {
         return self::where('idProveedor',$id)->first();
+    }
+
+    public static function searchProveedoresByName($name)
+    {
+        return self::where('nombreP', 'LIKE', "%$name%")->get();
+    }
+
+    public static function searchProveedores($query)
+    {
+        return self::where('nombreP', 'LIKE', "%$query%")
+                    ->orWhere('telefono', 'LIKE', "%$query%")
+                    ->orWhere('correo', 'LIKE', "%$query%")
+                    ->get();
     }
 
     public static function getAllProveedores()

@@ -8,9 +8,16 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ProveedorController extends Controller
 {
-    public function allProveedors(){
-        return response()->json(Proveedor::getAllProveedores());
+    public function allProveedors(Request $request)
+    {
+        $query = $request->query('pv');
+        if ($query) {
+            $proveedores = Proveedor::searchProveedoresByName($query);
+            return response()->json(['status' => true, 'proveedores' => $proveedores]);
+        }
+        return response()->json(['status' => true, 'proveedores' => Proveedor::getAllProveedores()]);
     }
+    
 
     public function OneProveedors($id){
         return response()->json(Proveedor::getProveedorById($id));

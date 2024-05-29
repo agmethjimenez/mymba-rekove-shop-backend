@@ -29,15 +29,15 @@ class adminController extends Controller
     public function changePassword(Request $request)
     {
         $request->validate([
-            'id' => 'required|exists:administradores,id',
-            'current_password' => 'required|string|min:8',
-            'new_password' => 'required|string|min:8|confirmed',
+            'id' => 'required',
+            'password_actual' => 'required',
+            'new_password' => 'required',
         ]);
 
         $id = $request->id;
-        $currentPassword = $request->current_password;
+        $currentPassword = $request->password_actual;
         $newPassword = $request->new_password;
-        $confirmPassword = $request->new_password_confirmation;
+        $confirmPassword = $request->new_password2;
 
         $response = Administrador::changePassword($id, $currentPassword, $newPassword, $confirmPassword);
 
@@ -47,7 +47,7 @@ class adminController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'id' => 'required|exists:administradores,id',
+            'id' => 'required',
             'username' => 'required|string|max:255',
             'email' => 'required|string|email|max:255',
         ]);
@@ -56,6 +56,45 @@ class adminController extends Controller
 
         $response = Administrador::updateAdmin($data);
 
-        return response()->json($response, $response['status'] ? 200 : 400);
+        if (!$response['status']) {
+            return response()->json([
+                'status' => false,
+                'message' => $response['message']
+            ], 400);
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => $response['message'],
+            'admin' => $response['admin']
+        ], 200);
+    }
+
+    public function getAdmins(){
+        return response()->json(Administrador::all(),200);
+    }
+
+    public function searchByUsername(Request $request)
+    {
+
+        $username = $request->query('username');
+        $result = Administrador::searchByUsername($username);
+
+        return response()->json($result);
+    }
+
+    public function searchByToken(Request $request)
+    {
+        $token = $request->query('tk');
+        $result = Administrador::searchByToken($token);
+
+        if (!$result) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Administrador no encontrado con ese token'
+            ], 404);
+        }
+
+        return response()->json($result,200);
     }
 }
