@@ -19,6 +19,7 @@ class Administrador extends Model
         'activo'
     ];
     public $timestamps = false;
+    public $incrementing = false;
 
     public static function createAdmin($data){
         return self::create([
@@ -34,7 +35,7 @@ class Administrador extends Model
 
     public static function updateAdmin($data)
     {
-        $admin = self::find($data['id']);
+        $admin = self::where('token',$data['token'])->first();
 
         if (!$admin) {
             return [

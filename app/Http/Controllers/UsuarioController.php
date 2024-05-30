@@ -175,7 +175,7 @@ class UsuarioController extends Controller
 
         Mail::to($email)->send(new RecuperarPasswordMail($email, $token, $codigo));
 
-        return response()->json(['status' => true, 'message' => 'Correo enviado correctamente']);
+        return response()->json(['status' => true, 'mensaje' => 'Correo enviado correctamente']);
     }
 
     public function validarExistenciaytoken(Request $request)

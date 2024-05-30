@@ -47,12 +47,12 @@ class adminController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'id' => 'required',
+            'token' => 'required',
             'username' => 'required|string|max:255',
             'email' => 'required|string|email|max:255',
         ]);
 
-        $data = $request->only(['id', 'username', 'email']);
+        $data = $request->only(['token', 'username', 'email']);
 
         $response = Administrador::updateAdmin($data);
 
@@ -65,7 +65,7 @@ class adminController extends Controller
 
         return response()->json([
             'status' => true,
-            'message' => $response['message'],
+            'mensaje' => $response['message'],
             'admin' => $response['admin']
         ], 200);
     }

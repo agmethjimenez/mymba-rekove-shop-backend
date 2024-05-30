@@ -25,7 +25,7 @@ class Producto extends Model
     ];
     public $timestamps = false;
     public $incrementing = false; 
-    
+
     public function proveedor(){
         return $this->belongsTo(Proveedor::class,'proveedor','idProveedor');
 
@@ -38,5 +38,63 @@ class Producto extends Model
     }
     public function detallespedido(){
         return $this->hasMany(DetallePedido::class,'idProducto','idProducto');
+    }
+
+    public static function getProductos($id = null,$name = null, $category = null){
+        $productos = self::with(['proveedor','marca','categoria'])->where('activo',true);
+
+        if($id !== null){
+            $productos->where('idProducto',$id);
+        }
+
+        if($name !== null){
+            $productos->where('nombre', 'like', '%'.$name.'%');
+        }
+
+        if($category !== null && $category !== 0){
+            $productos->where('categoria',$category);
+        }
+
+        return $productos->get();
+    }
+
+    public static function getOneProducto($id){
+        return self::where('idProducto',$id)->where('activo',true)->with(['proveedor','marca','categoria'])->first();
+    }
+
+    public static function createProducto($data){
+        $producto = self::create([
+            'idProducto'=>rand(10000,99999),
+            'proveedor' => $data['proveedor'],
+            'nombre'=>$data['nombre'],
+            'descripcionP'=>$data['descripcion'],
+            'contenido' => $data['contenido'],
+            'precio' => $data['precio'],
+            'marca' => $data['marca'],
+            'categoria' => $data['categoria'],
+            'cantidadDisponible'=> $data['stock'],
+            'imagen' => $data['imagen'],
+            'activo' => true
+        ]);
+
+        if(!$producto){
+            return[
+                'status'=>false,
+                'mensaje'=>"Error al crear producto"
+            ];
+        }
+        $admin = Administrador::where('token',$data['admin'])->first();
+
+        ProductoAgregado::create([
+            "administrador"=>$admin->id,
+            "producto" => $producto->idProducto,
+            'agregado_el'=> now()
+        ]);
+        return[
+            'status'=>true,
+            'mensaje'=>"Producto creado exitosamente",
+            'producto'=>$producto
+        ];
+
     }
 }

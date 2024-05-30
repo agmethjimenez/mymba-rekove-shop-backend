@@ -27,7 +27,7 @@ class Credencial extends Model
     }
 
     public static function actualizarTokenyCodigo($email){
-        $user = self::where('email',$email)->first();
+        $user = self::where('email',$email)->where('activo',true)->first();
 
         if(!$user){
             return[
