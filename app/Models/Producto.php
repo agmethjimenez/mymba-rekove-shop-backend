@@ -97,4 +97,63 @@ class Producto extends Model
         ];
 
     }
+
+    public static function updateProducto($id, $data){
+        $producto = self::find($id);
+
+        if(!$producto){
+            return [
+                'status'=>false,
+                'mensaje'=>"Producto no encontrado"
+            ];
+        }
+
+        $producto->proveedor = $data['proveedor'];
+        $producto->nombre = $data['nombre'];
+        $producto->descripcionP = $data['descripcion'];
+        $producto->contenido = $data['contenido'];
+        $producto->precio = $data['precio'];
+        $producto->marca = $data['marca'];
+        $producto->categoria = $data['categoria'];
+        $producto->cantidadDisponible = $data['stock'];
+        $producto->imagen = $data['imagen'];
+
+        if(!$producto->save()){
+            return [
+                'status'=>false,
+                'mensaje'=>"Error al actualizar producto"
+            ];
+        }
+
+        return [
+            'status'=>true,
+            'mensaje'=>"Producto actualizado exitosamente",
+            'producto'=>$producto
+        ];
+    }
+
+    static public function desactivarProducto($id){
+        $producto = self::find($id);
+
+        if(!$producto){
+            return [
+                'status'=>false,
+               'mensaje'=>"Producto no encontrado"
+            ];
+        }
+
+        $producto->activo = false;
+
+        if(!$producto->save()){
+            return [
+                'status'=>false,
+               'mensaje'=>"Error al desactivar producto"
+            ];
+        }
+
+        return [
+            'status'=>true,
+           'mensaje'=>"Producto desactivado exitosamente"
+        ];
+    }
 }

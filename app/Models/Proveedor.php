@@ -58,4 +58,34 @@ class Proveedor extends Model
         return self::all();
     }
 
+    public static function updateProveedor($id, $data){
+        $proveedor = self::find($id);
+
+        if (!$proveedor) {
+            return[
+                "status"=>false,
+                "mensaje"=>"Proveedor no encontrado"
+            ];
+        }
+        if (!$proveedor->activo) {
+            return[
+                "status"=>false,
+                "mensaje"=>"Proveedor desactivado"
+            ];
+        }
+
+        $proveedor->nombreP = $data['nombre'];
+        $proveedor->ciudad = $data['ciudad'];
+        $proveedor->correo = $data['correo'];
+        $proveedor->telefono = $data['telefono'];
+        $proveedor->estado = $data['estado'];
+
+        $proveedor->save();
+
+        return[
+            "status"=>true,
+            "mensaje"=>"Proveedor actualizado"
+        ];
+    }
+
 }

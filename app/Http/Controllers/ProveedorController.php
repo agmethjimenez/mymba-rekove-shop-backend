@@ -49,4 +49,32 @@ class ProveedorController extends Controller
             "proveedor"=>$proveedor
         ]);
     }
+
+    public function updateProveedor(Request $request){
+        $request->validate([
+            "id"=>'required',
+            "nombre"=>'required',
+            "ciudad"=>'required',
+            "correo"=>'required|email',
+            "telefono" => 'required'
+        ]);
+        $proveedor = Proveedor::updateProveedor($request->id,[
+            "nombre" => $request->nombre,
+            "ciudad"=> $request->ciudad,
+            "correo"=> $request->correo,
+            "telefono"=> $request->telefono
+        ]);
+
+        if(!$proveedor['status']){
+            return response()->json([
+                "status"=>false,
+                "mensaje"=>"Error al insertar proveedor"
+            ],400);
+        }
+
+        return response()->json([
+            "status"=>true,
+            "proveedor"=>$proveedor
+        ]);
+    }
 }

@@ -205,4 +205,20 @@ class UsuarioController extends Controller
             return response()->json($cambio, 500);
         }
     }
+
+    public function correccionClave(Request $request){
+        $cambio = Credencial::ActualizarCredenciales($request->email,$request->password);
+
+        if(!$cambio['status']){
+            return response()->json([
+                "status" => false,
+                "mensaje" => $cambio['mensaje']
+            ],500);
+        }
+
+        return response()->json([
+            "status" => true,
+            "mensaje" => $cambio['mensaje']
+        ],200);
+    }
 }
