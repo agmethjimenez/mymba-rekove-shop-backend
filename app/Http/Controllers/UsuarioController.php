@@ -207,7 +207,7 @@ class UsuarioController extends Controller
     }
 
     public function correccionClave(Request $request){
-        $cambio = Credencial::ActualizarCredenciales($request->email,$request->password);
+        $cambio = Credencial::ActualizarCredenciales($request->email,$request->token,$request->password);
 
         if(!$cambio['status']){
             return response()->json([

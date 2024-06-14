@@ -78,23 +78,23 @@ class Credencial extends Model
         }
     }
 
-    static public function ActualizarCredenciales($email,$password){
+    static public function ActualizarCredenciales($email,$tokenK,$password){
         $passwordEncriptada = bcrypt($password);
         $token = bin2hex(random_bytes(16));
 
-        $usuario = self::where('email',$email);
+        $usuario = self::where('email',$email)->where('token',$tokenK)->first();
 
         if(!$usuario){
             return[
                 "status"=>false,
-                "mensajes"=>"Usuario no existente"
+                "mensaje"=>"Usuario no existente"
             ];
         }
 
         if(!$usuario->activo){
             return[
                 "status"=>false,
-                "mensajes"=>"Usuario desactivado"
+                "mensaje"=>"Usuario desactivado"
             ];
         }
 
