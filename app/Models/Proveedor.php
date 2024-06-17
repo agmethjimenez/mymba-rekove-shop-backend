@@ -55,7 +55,7 @@ class Proveedor extends Model
 
     public static function getAllProveedores()
     {
-        return self::all();
+        return self::where('estado',true)->get();
     }
 
     public static function updateProveedor($id, $data){
@@ -67,7 +67,7 @@ class Proveedor extends Model
                 "mensaje"=>"Proveedor no encontrado"
             ];
         }
-        if (!$proveedor->activo) {
+        if (!$proveedor->estado) {
             return[
                 "status"=>false,
                 "mensaje"=>"Proveedor desactivado"
@@ -85,6 +85,31 @@ class Proveedor extends Model
         return[
             "status"=>true,
             "mensaje"=>"Proveedor actualizado"
+        ];
+    }
+
+    public static function deleteProveedor($id){
+        $proveedor = self::find($id);
+
+        if(!$proveedor){
+            return[
+                "status"=>false,
+                "mensaje"=>"Proveedor no encontrado"
+            ];
+        }
+        if (!$proveedor->estado) {
+            return[
+                "status"=>false,
+                "mensaje"=>"Proveedor desactivado"
+            ];
+        }
+
+        $proveedor->estado = false;
+        $proveedor->save();
+
+        return[
+            "status"=>true,
+            "mensaje"=>"Proveedor desactivado"
         ];
     }
 

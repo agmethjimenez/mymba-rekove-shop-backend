@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\adminController;
 use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\EstadoController;
 use App\Http\Controllers\MarcaController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\ProductoController;
@@ -47,7 +48,7 @@ Route::get('/proveedores',[ProveedorController::class, 'allProveedors']);
 Route::get('/proveedores/{id}',[ProveedorController::class,'OneProveedors']);
 Route::post('/proveedores',[ProveedorController::class,'CreateProveedor']);
 Route::put("/proveedores",[ProveedorController::class,'updateProveedor']);
-
+Route::delete('/proveedores/delete/{id}/{token}',[ProveedorController::class,'desactivarProveedor']);
 
 #RUTAS ADMINISTRADOR
 Route::get('/admin/all',[adminController::class,'getAdmins']);
@@ -76,3 +77,5 @@ Route::get('/categorias',[CategoriaController::class,'getCategorias']);
 
 #RUTA MARCAS
 Route::get('/marcas',[MarcaController::class,'getMarcas']);
+#RUTA DE ESTADOS
+Route::get('/estados',[EstadoController::class,'getEstados']);

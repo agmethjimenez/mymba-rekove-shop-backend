@@ -72,4 +72,24 @@ class Pedido extends Model
         ];
     }
 
+    public static function updatePedido($id, $estado){
+        $pedido = self::find($id);
+
+        if(!$pedido){
+            return[
+                "status"=>false,
+                "mensaje"=>"Pedido no encontrado"
+            ];
+        }
+
+        $pedido->estado = $estado;
+        $pedido->save();
+
+        return[
+            "status"=>true,
+            "mensaje"=>"Pedido actualizado correctamente"
+        ];
+
+    }
+
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Administrador;
 use App\Models\Proveedor;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -56,25 +57,38 @@ class ProveedorController extends Controller
             "nombre"=>'required',
             "ciudad"=>'required',
             "correo"=>'required|email',
-            "telefono" => 'required'
+            "telefono" => 'required',
+            "estado"=>'required'
         ]);
         $proveedor = Proveedor::updateProveedor($request->id,[
             "nombre" => $request->nombre,
             "ciudad"=> $request->ciudad,
             "correo"=> $request->correo,
-            "telefono"=> $request->telefono
+            "telefono"=> $request->telefono,
+            "estado"=> $request->estado
         ]);
 
         if(!$proveedor['status']){
             return response()->json([
                 "status"=>false,
-                "mensaje"=>"Error al insertar proveedor"
+                "mensaje"=>$proveedor['mensaje'],
             ],400);
         }
 
-        return response()->json([
-            "status"=>true,
-            "proveedor"=>$proveedor
-        ]);
+        return response()->json($proveedor);
+    }
+    public function desactivarProveedor($id,$token){
+        $admin = Administrador::where('token',$token)->first();
+        if(!$admin){
+            return response()->json([
+                "status" => true,
+                "mensaje" => "Acceso no autorizado"
+            ],401);
+        }
+        $response = Proveedor::deleteProveedor($id);
+        if(!$response['status']){
+            return response()->json($response, 400);
+        }
+        return response()->json($response,200);
     }
 }
