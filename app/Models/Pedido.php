@@ -74,11 +74,18 @@ class Pedido extends Model
 
     public static function updatePedido($id, $estado){
         $pedido = self::find($id);
-
+        
         if(!$pedido){
             return[
                 "status"=>false,
                 "mensaje"=>"Pedido no encontrado"
+            ];
+        }
+
+        if($pedido->estado == $estado){
+            return[
+                "status"=>false,
+                "mensaje"=>"El pedido ya se encuentra en este estado, seleccione otro"
             ];
         }
 

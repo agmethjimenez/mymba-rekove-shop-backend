@@ -62,7 +62,7 @@ Route::post('/admin/restaurar',[adminController::class, 'changePassword']);
 Route::get('/pedidos', [PedidoController::class, 'getPedidos']);
 Route::get('/pedidos/{id}', [PedidoController::class, 'getPedidos']);
 Route::get('/usuario/pedido/{id}',[PedidoController::class,'getPedidoUser']);
-
+Route::put('/pedidos/update/{id}/{estado}/{token}',[PedidoController::class,'updatePedido']);
 
 #RUTAS DE PRODUCTO
 Route::post('/productos/update',[ProductoController::class,'updateProducto']);

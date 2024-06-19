@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Administrador;
 use App\Models\DetallePedido;
 use App\Models\Pedido;
 use App\Models\Producto;
@@ -60,6 +61,23 @@ public function getPedidoUser($id){
     });
 
     return response()->json($pedidosTransformados, 200);
+}
+
+public function updatePedido($id,$estado,$token){
+    $admin = Administrador::where('token',$token)->first();
+    if(!$admin){
+        return response()->json([
+            "status" => false,
+            "mensaje" => "Acceso no autorizado"
+        ],401);
+    }
+
+    $response = Pedido::updatePedido($id, $estado);
+    if(!$response['status']){
+        return response()->json($response,400);
+    }else{
+        return response()->json($response,200);
+    }
 }
 
 }
