@@ -45,6 +45,31 @@ class PedidoController extends Controller
         return response()->json($pedidosTransformados, 200);
     }
 }
+public function createPedido(Request $request){
+    /*HttpClient::setBody([
+    'usuario' => $_SESSION['id_usuario'],
+    'datospago' => $datospago,
+    'ciudad' => $ciudad,
+    'direccion' => $direccion,
+    'detalles' => $_SESSION['carrito'],
+    'totalp' => $sumaTotal
+]);*/
+$insert = Pedido::InsertPedido([
+    'usuario' => $request->usuario,
+    'datospago' => $request->datospago,
+    'ciudad' => $request->ciudad,
+    'direccion' => $request->direccion,
+    'detalles' => $request->detalles,
+    'totalp' => $request->totalp
+]);
+
+if(!$insert['status']){
+    return response()->json($insert,400);
+}
+
+return response()->json($insert,201);
+
+}
 
 public function getPedidoUser($id){
     $pedidos = Pedido::where('usuario',$id)->with([

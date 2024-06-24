@@ -25,14 +25,18 @@ class Proveedor extends Model
     }
 
     public static function createProveedor($data){
-        return self::create([
+        $proveedor = self::create([
             "idProveedor"=> rand(100000,999999),
             "nombreP"=>$data['nombre'],
             "ciudad"=>$data['ciudad'],
             "correo"=>$data['correo'],
             "telefono"=>$data['telefono']
         ]);
-
+        return[
+            "status"=>true,
+            "mensaje"=>"Proveedor creado correctamente",
+            "proveedor"=>$proveedor
+        ];
     }
 
     public static function getProveedorById($id)

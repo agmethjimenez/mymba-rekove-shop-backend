@@ -60,6 +60,7 @@ Route::post('/admin/restaurar',[adminController::class, 'changePassword']);
 
 #RUTA DE PEDIDO
 Route::get('/pedidos', [PedidoController::class, 'getPedidos']);
+Route::post('/pedidos/create',[PedidoController::class,'createPedido']);
 Route::get('/pedidos/{id}', [PedidoController::class, 'getPedidos']);
 Route::get('/usuario/pedido/{id}',[PedidoController::class,'getPedidoUser']);
 Route::put('/pedidos/update/{id}/{estado}/{token}',[PedidoController::class,'updatePedido']);

@@ -34,43 +34,53 @@ class Pedido extends Model
     }
     
 
-    public static function InsertPedido($data){
-        $pedido = self::create([
-            "idPedido"=> substr(uniqid(), 0, 10),
-            "usuario"=> $data['usuario'],
-            "ciudad"=> $data['ciudad'],
-            "direccion"=> $data['direccion'],
-            "fecha" => now(),
-            "total" => $data['totalp'],
-            "detalles_pago"=> substr($data['datospago'], 0, 255),
-            "estado" => 1 
-        ]);
+    public static function InsertPedido($data)
+{
+    // Asegúrate de que $data['datospago'] sea una cadena JSON
+    $detallesPago = is_array($data['datospago']) ? json_encode($data['datospago']) : (string) $data['datospago'];
 
-        if(!$pedido){
-            return[
-                "status"=>false,
-                "mensaje"=>"Error al insertar pedido"
-            ];
-        }
+    // Crear el pedido
+    $pedido = self::create([
+        "idPedido" => substr(uniqid(), 0, 10),
+        "usuario" => $data['usuario'],
+        "ciudad" => $data['ciudad'],
+        "direccion" => $data['direccion'],
+        "fecha" => now(),
+        "total" => $data['totalp'],
+        "detalles_pago" => substr($detallesPago, 0, 255),
+        "estado" => 1
+    ]);
 
-        foreach ($data['detalles'] as $detalles ) {
-            DetallePedido::create([
-                "idPedido"=> $pedido->idPedido,
-                "idProducto" => $detalles['id'],
-                "cantidad"=> $detalles['cantidad'],
-                "total"=> $detalles['total']
-            ]);
-
-            $producto = Producto::find($detalles['id']);
-            $producto->cantidadDisponible += $detalles['cantidad'];
-            $producto->save();
-        }
-
+    if (!$pedido) {
         return [
-            'status' => true,
-            'mensaje' => 'Pedido exitoso'
+            "status" => false,
+            "mensaje" => "Error al insertar pedido"
         ];
     }
+
+    // Crear los detalles del pedido
+    foreach ($data['detalles'] as $detalle) {
+        DetallePedido::create([
+            "idPedido" => $pedido->idPedido,
+            "idProducto" => $detalle['id'],
+            "cantidad" => $detalle['cantidad'],
+            "total" => $detalle['total']
+        ]);
+
+        // Actualizar la cantidad disponible del producto
+        $producto = Producto::find($detalle['id']);
+        if ($producto) {
+            $producto->cantidadDisponible -= $detalle['cantidad'];
+            $producto->save();
+        }
+    }
+
+    return [
+        'status' => true,
+        'mensaje' => 'Pedido exitoso'
+    ];
+}
+
 
     public static function updatePedido($id, $estado){
         $pedido = self::find($id);
