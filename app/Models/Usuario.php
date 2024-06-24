@@ -191,14 +191,12 @@ class Usuario extends Model
                 "mensaje"=>"usuario no existente"
             ];
         }
-
         if (!$usuario->activo) {
             return[
                 "status"=>false,
                 "mensaje"=>"Usuario ya desactivado"
             ];
         }
-
         $usuario->activo = false;
         $usuario->save();
 
@@ -211,7 +209,5 @@ class Usuario extends Model
             "status"=>true,
             "mensaje"=>"Desactivado correctamente"
         ];
-
-
     }
 }
