@@ -10,7 +10,7 @@
     <p>Hola,</p>
     <p>Has solicitado restablecer tu contraseña. Aquí tienes la información necesaria:</p>
     <p><strong>Código:</strong> {{ $codigo }}</p>
-    <p><a href="{{ url('/catalogo/passwordback/codigo.php?email=' . $email . '&token=' . $token) }}">Da clic aquí para actualizar tu contraseña</a></p>
+    <p><a href="{{('https://mymbarekoveshop.000webhostapp.com/catalogo/passwordback/codigo.php?email=' . $email . '&token=' . $token) }}">Da clic aquí para actualizar tu contraseña</a></p>
     <p>Gracias,</p>
     <p>{{ config('app.name') }}</p>
 </body>
